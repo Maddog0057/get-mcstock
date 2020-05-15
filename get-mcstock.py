@@ -6,7 +6,6 @@
 import re
 import requests
 from time import sleep
-import smtplib
 import pickle
 import os
 import json
@@ -42,7 +41,7 @@ class DictDiffer(object):
     def unchanged(self):
         return set(o for o in self.intersect if self.past_dict[o] == self.current_dict[o])
 
-strix570 = [
+URLS = [
    'https://www.microcenter.com/product/613206/asus-x570-i-rog-strix-amd-am4-mini-itx-motherboard',
    'https://www.microcenter.com/product/608673/gigabyte-x570-aorus-amd-am4-mitx-motherboard'
     ]
@@ -51,26 +50,26 @@ def send_discord(msg):
     webhook_url = 'DISCORDWEBHOOKURLHERE'
     requests.post(webhook_url, data=json.dumps({ "content": msg }), headers={ 'Content-Type': 'application/json',})
 
-for item in strix570:
+for item in URLS:
     respData = requests.get(item, cookies=cookies).text
-    skuNum = re.findall(r"'SKU':(.*?),",str(respData))#[0].replace("'",'')
+    skuNum = re.findall(r"'SKU':(.*?),",str(respData))
     print(skuNum[0])
-    inStock = re.findall(r"'inStock':(.*?),",str(respData))#[0].replace("'",'')
-    #inStock = ["'True'"]
+    inStock = re.findall(r"'inStock':(.*?),",str(respData))
+    #inStock = ["'True'"] #Uncomment to test a successful run
     print(inStock[0])
-    productPrice = re.findall(r"'price':(.*?),",str(respData))#[0].replace("'",'')
+    productPrice = re.findall(r"'price':(.*?),",str(respData))
     print(productPrice[0])
-    storeId = re.findall(r"'storeNum':(.*?),",str(respData))#[0].replace("'",'')
-    brand = re.findall(r"'brand':(.*?),",str(respData))#[0].replace("'",'')
+    storeId = re.findall(r"'storeNum':(.*?),",str(respData))
+    brand = re.findall(r"'brand':(.*?),",str(respData))
     print(storeId[0])
     print(stockCurrent)
     stockCurrent[skuNum[0].replace("'",'')] = inStock[0].replace("'",'')
     for stock in inStock:
         print(stock)
         if stock == "'True'":
-            msgText = msgText+brand[0].replace("'",'')+" x570 Mobo-- SKU: "+skuNum[0].replace("'",'')+" -- "+productPrice[0].replace("'",'')+"\n"+item+"\n\n"
+            msgText = msgText+brand[0].replace("'",'')+" -- SKU: "+skuNum[0].replace("'",'')+" -- "+productPrice[0].replace("'",'')+"\n"+item+"\n\n"
         elif stock == "'False'":
-            print("X570 -- SKU: "+skuNum[0].replace("'",'')+" -- Out of stock")
+            print("SKU: "+skuNum[0].replace("'",'')+" -- Out of stock")
         else:
             print("Error retrieving stock")
     sleep(5)
