@@ -1,7 +1,7 @@
 # get-mcstock
 
-Original code from [this forum post on level 1 techs](https://forum.level1techs.com/t/automated-microcenter-stock-checking-updated/117256)
-Modifications only made to data parsing (for updated Micro Center Website) and replacing email notif with discord
+* Original code from [this forum post on level 1 techs](https://forum.level1techs.com/t/automated-microcenter-stock-checking-updated/117256)
+* Modifications only made to data parsing (for updated Micro Center Website) and replacing email notif with discord
 
 ## HOW TO USE:
 
